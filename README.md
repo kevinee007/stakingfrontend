@@ -1,6 +1,6 @@
-# Web3 Starter
+# CNDL Staking Front-End
 
-Simple web3 starter based on Next.js & Chakra-UI w/ UseWallet for Web3 support
+Simple web3 staker  based on Next.js & Chakra-UI w/ UseWallet for Web3 support
 
 ## Get started:
 
