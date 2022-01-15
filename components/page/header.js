@@ -9,6 +9,7 @@ import Ribbon from '../ribbon'
 import { useWeb3 } from '../../contexts/useWeb3'
 
 import UserAddress from './wallet'
+import ChainMenu from './chainmenu'
 
 const Header = () => {
   const { account, balance } = useWeb3()
@@ -42,6 +43,7 @@ const Header = () => {
           {/* {account && <UserWallet />} */}
         </Box>
         <Box>
+          <ChainMenu />
           <IconButton
             mr={2}
             borderRadius="lg"
