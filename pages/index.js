@@ -17,6 +17,7 @@ import {
 import { Box, Heading, Text, Center, Link } from '@chakra-ui/layout'
 import { useColorModeValue } from '@chakra-ui/color-mode'
 
+import Burn from '../components/burn'
 import Page from '../components/page'
 import FAQs from '../components/faqs'
 import { useWeb3 } from '../contexts/useWeb3'
@@ -317,6 +318,7 @@ export default function Home() {
               </Center>
             )}
           </Box>
+          <Burn />
           <FAQs />
         </Flex>
       </Center>
