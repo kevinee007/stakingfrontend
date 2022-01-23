@@ -22,6 +22,7 @@ export const Web3Provider = (props) => {
   const [provider, setProvider] = useLocalStorage('provider', false)
   const [block, setBlock] = useState(0)
   const [ens, setEns] = useState(false)
+  const [chainId, setChainId] = useState(1)
 
   // Connect/Disconnect Wallet
   const connectWallet = async (key) => {
@@ -66,6 +67,12 @@ export const Web3Provider = (props) => {
     setEns(await web3.lookupAddress(address))
   }
 
+  const getChainId = async() => {
+    const { chainId } = await web3.getNetwork()
+    setChainId(chainId)
+  }
+  
+
   // Once we've connected a wallet, switch to wallet provider
   useEffect(async () => {
     if (status === 'connected') {
@@ -78,13 +85,14 @@ export const Web3Provider = (props) => {
     }
   }, [status])
 
-  useEffect(() => {
-    if (account) fetchENS(account)
-  }, [account])
+  // useEffect(() => {
+  //   if (account) fetchENS(account)
+  // }, [account])
 
   // Once loaded, initalise the provider
   useEffect(() => {
     initProvider()
+    getChainId()
   }, [])
 
   const ethBalance = balance ? balance / 1e18 : 0
@@ -93,6 +101,8 @@ export const Web3Provider = (props) => {
     () => ({
       provider,
       setProvider,
+      chainId,
+      setChainId,
       connectWallet,
       disconnectWallet,
       account,
@@ -103,7 +113,7 @@ export const Web3Provider = (props) => {
       block,
       ens
     }),
-    [web3, provider, account, status, balance, block, ens]
+    [web3, provider, account, status, balance, block, ens, chainId]
   )
 
   // pass the value in provider and return

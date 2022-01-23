@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 // let provider = new ethers.providers.JsonRpcProvider(atob(ETH_NODE))
 // export let web3 = new ethers.providers.getDefaultProvider()
 
-export const chainID = process.env.CHAIN_ID ? process.env.CHAIN_ID : 1
+export const chainID = process.env.CHAIN_ID ? process.env.CHAIN_ID : 137
 console.log('Chain ID: ', chainID)
 
 export let web3 = new ethers.providers.InfuraProvider(

@@ -39,19 +39,29 @@ import {
 import { comma } from '../utils/helpers'
 
 // CNDL PROGRAM
-const IncentiveKey = [
-  '0xbc138bD20C98186CC0342C8e380953aF0cb48BA8',
-  '0x2feaC2752F8124f1EDDA2cda4a8756a39E4Da110',
-  1633694400,
-  1638878400,
-  '0xDAEada3d210D2f45874724BeEa03C7d4BBD41674'
-]
+const IncentiveKey = {
+  1: [
+    '0xbc138bD20C98186CC0342C8e380953aF0cb48BA8',
+    '0x2feaC2752F8124f1EDDA2cda4a8756a39E4Da110',
+    1633694400,
+    1638878400,
+    '0xDAEada3d210D2f45874724BeEa03C7d4BBD41674'
+  ],
+  137: [
+    '0x5423063af146F5abF88Eb490486E6B53FA135eC9',
+    '0xeB00F118fDe9A921aade0919200E0EFB401A5E3D',
+    1642393212,
+    1645244412 ,
+    '0x546D090bbcEC3d96903d41e38C3436c1C601AF9c'
+  ]
+}
 
 const programEmissions = 10000000
 const secondsInAYear = 31540000
 
 export default function Home() {
-  const { account, block } = useWeb3()
+  const { account, block, chainId } = useWeb3()
+  console.log(chainId)
   const { watchTx, addAlert } = useAlerts()
   const [positions, setPositions] = useState([])
   const [pool, setPool] = useState({})
@@ -59,7 +69,7 @@ export default function Home() {
 
   const deposit = async (id) => {
     try {
-      const tx = await depositStakeNFT(id, account, IncentiveKey)
+      const tx = await depositStakeNFT(id, account, IncentiveKey[chainId])
       watchTx(tx.hash, 'Depositing NFT')
     } catch (error) {
       addAlert('fail', 'Program not active. Try later')
@@ -73,7 +83,7 @@ export default function Home() {
 
   const stake = async (id) => {
     try {
-      const tx = await stakeNFT(id, IncentiveKey)
+      const tx = await stakeNFT(id, IncentiveKey[chainId])
       watchTx(tx.hash, 'Staking NFT')
     } catch (error) {
       addAlert('fail', 'Program not active. Try later')
@@ -81,12 +91,12 @@ export default function Home() {
   }
 
   const claim = async (id, reward) => {
-    const tx = await claimReward(id, account, reward, IncentiveKey)
+    const tx = await claimReward(id, account, reward, IncentiveKey[chainId])
     watchTx(tx.hash, 'Claiming rewards')
   }
 
   const exit = async (id, reward) => {
-    const tx = await exitPool(id, account, reward, IncentiveKey)
+    const tx = await exitPool(id, account, reward, IncentiveKey[chainId])
     watchTx(tx.hash, 'Exiting pool & claiming rewards')
   }
 
@@ -96,16 +106,18 @@ export default function Home() {
 
   useEffect(async () => {
     if (account) {
-      const lpPositions = await findNFTByPool(account, IncentiveKey)
+      const lpPositions = await findNFTByPool(account, IncentiveKey[chainId])
       setPositions(lpPositions)
     }
     /// Calculate APY
-    const data = await getPoolData(IncentiveKey[1], IncentiveKey[0])
-    const emissionsPerSecond =
-      programEmissions / (IncentiveKey[3] - IncentiveKey[2])
-    const apy =
-      ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
-    setPool({ ...data, apy })
+    if (chainId == 1) {
+      const data = await getPoolData(IncentiveKey[chainId][1], IncentiveKey[chainId][0])
+      const emissionsPerSecond =
+        programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
+      const apy =
+        ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
+      setPool({ ...data, apy })
+    }
   }, [account, block])
 
   return (
@@ -309,7 +321,7 @@ export default function Home() {
                   {`Deposit `}
                   <Link
                     isExternal
-                    href={`https://app.uniswap.org/#/add/ETH/${IncentiveKey[0]}/10000`}
+                    href={`https://app.uniswap.org/#/add/ETH/${IncentiveKey[chainId][0]}/10000`}
                   >
                     <b>{`${pool.symbol ? pool.symbol : '???'} & ETH here`}</b>
                   </Link>

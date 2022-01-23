@@ -1,10 +1,11 @@
 import React from 'react'
+import NextLink from 'next/link'
 import { Image } from '@chakra-ui/image'
 import { IconButton } from '@chakra-ui/button'
 import { FiSun, FiMoon } from 'react-icons/fi'
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
 import { Box, Flex, LinkBox, LinkOverlay } from '@chakra-ui/layout'
-import { Heading, Text, Center } from '@chakra-ui/react'
+import { Heading, Text, Center, Link } from '@chakra-ui/react'
 import Ribbon from '../ribbon'
 import { useWeb3 } from '../../contexts/useWeb3'
 
@@ -32,15 +33,25 @@ const Header = () => {
           <Ribbon w={64} h={64} />
           <Box ml="2">
             <Heading size="lg" mb={2}>
-              Candle LP Staking
+              Candle App
             </Heading>
-            <Text fontSize="lg" color="gray.500">
+            {/* <Text fontSize="lg" color="gray.500">
               Stake your CNDL/USDC LP position
-            </Text>
+            </Text> */}
           </Box>
         </Flex>
         <Box display={['none', 'none', 'none', 'block']}>
           {/* {account && <UserWallet />} */}
+        </Box>
+        <Box>
+          <NextLink href='/' passHref>
+              <Link>Stake</Link>
+          </NextLink>
+        </Box>
+        <Box>
+          <NextLink href='/burn' passHref>
+            <Link>Burn</Link>
+          </NextLink>
         </Box>
         <Box>
           <ChainMenu />
