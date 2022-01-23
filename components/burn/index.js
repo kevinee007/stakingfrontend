@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
-import { ERC20, burnerPolygon } from '../../contracts'
+import { ERC20, burnerPolygon, CNDL } from '../../contracts'
 import {
     Button,
     Heading,
@@ -10,9 +10,10 @@ import {
     Textarea
   } from '@chakra-ui/react'
   import { web3 } from '../../utils/ethers'
-
+  import { useWeb3 } from '../../contexts/useWeb3'
   
   export default function Burn() {
+    const { chainId } = useWeb3()
     const [cndlAmount, setCndlAmount] = useState('')
     const [burnMessage, setburnMessage] = useState('')
 
@@ -20,16 +21,16 @@ import {
     async function onApprove() {
         if (cndlAmount > 0) {
             const signer = web3.getSigner()
-            const CNDL_POLYGON = "0x5423063af146F5abF88Eb490486E6B53FA135eC9"
-            const cndlContract = new ethers.Contract(CNDL_POLYGON, ERC20.abi, signer)
-          await cndlContract.approve(burnerPolygon.address, ethers.utils.parseUnits(cndlAmount, 18))
+            console.log(CNDL[chainId].address)
+            const cndlContract = new ethers.Contract(CNDL[chainId].address, ERC20.abi, signer)
+          await cndlContract.approve(burnerPolygon[chainId].address, ethers.utils.parseUnits(cndlAmount, 18))
         }
       }
     
     async function onBurn() {
         if (cndlAmount > 0) {
             const signer = web3.getSigner()
-            const burnerContract = new ethers.Contract(burnerPolygon.address, burnerPolygon.abi, signer)
+            const burnerContract = new ethers.Contract(burnerPolygon[chainId].address, burnerPolygon.abi, signer)
             await burnerContract.burnWithMessage(
             ethers.utils.parseUnits(cndlAmount, 18),
             burnMessage

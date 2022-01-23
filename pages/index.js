@@ -61,7 +61,6 @@ const secondsInAYear = 31540000
 
 export default function Home() {
   const { account, block, chainId } = useWeb3()
-  console.log(chainId)
   const { watchTx, addAlert } = useAlerts()
   const [positions, setPositions] = useState([])
   const [pool, setPool] = useState({})
@@ -106,18 +105,16 @@ export default function Home() {
 
   useEffect(async () => {
     if (account) {
-      const lpPositions = await findNFTByPool(account, chainId, IncentiveKey[chainId])
+      const lpPositions = await findNFTByPool(chainId, account, IncentiveKey[chainId])
       setPositions(lpPositions)
     }
     /// Calculate APY
-    if (chainId == 137) {
-      const data = await getPoolData(IncentiveKey[chainId][1], IncentiveKey[chainId][0])
-      const emissionsPerSecond =
-        programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
-      const apy =
-        ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
-      setPool({ ...data, apy })
-    }
+    const data = await getPoolData(chainId, IncentiveKey[chainId][1], IncentiveKey[chainId][0])
+    const emissionsPerSecond =
+      programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
+    const apy =
+      ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
+    setPool({ ...data, apy })
   }, [account, block])
 
   return (

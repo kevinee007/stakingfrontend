@@ -1,8 +1,8 @@
-import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER } from '../contracts'
+import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC } from '../contracts'
 import { commas } from '../utils/helpers'
 import { ethers, BigNumber } from 'ethers'
 import { Contract, Provider } from 'ethers-multicall'
-import { web3 } from '../utils/ethers'
+import { web3, web3Polygon } from '../utils/ethers'
 
 import univ3prices from '@thanpolas/univ3prices'
 
@@ -157,7 +157,7 @@ export const exitPool = async (tokenId, address, amount, program) => {
 
 // Find users NFTs in pools
 // Uses Promise.all rather than Multicall. Need to be optimised
-export const findNFTByPool = async (address, chainId, program) => {
+export const findNFTByPool = async (chainId, address, program) => {
   // Get pool tokens
   const pool = new ethers.Contract(program[1], v3Pool.abi, web3)
 
@@ -178,9 +178,9 @@ export const findNFTByPool = async (address, chainId, program) => {
   )
 
   // Setup Multicall Provider
-  const ethcallProvider = new Provider(web3, 137)
+  const ethcallProvider = new Provider(web3, chainId)
   // Multicall hates the v3Positions's ABI???????
-  const v3Manger = new Contract(v3Positions.address, [
+  const v3Manager = new Contract(v3Positions.address, [
     {
       inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
       name: 'positions',
@@ -211,7 +211,7 @@ export const findNFTByPool = async (address, chainId, program) => {
     }
   ])
   // get all NFT Data data
-  const nftDataCalls = nftList.map((item) => v3Manger.positions(item.id))
+  const nftDataCalls = nftList.map((item) => v3Manager.positions(item.id))
   const nftData = await ethcallProvider.all(nftDataCalls)
 
   // Filter out NFTs w/ no liquidity & unrelated to the pool we want
@@ -258,7 +258,7 @@ export const findNFTByPool = async (address, chainId, program) => {
     let deposited = v3Staker.address === token.address
     let staked = false
     let reward = null
-
+  
     const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
     const tokenIdHexString = BigNumber.from(token.id).toHexString()
     const fees = await manager.callStatic.collect({
@@ -296,14 +296,16 @@ export const findNFTByPool = async (address, chainId, program) => {
 }
 
 // Fetches TVL of a XXX/ETH pool and returns prices
-export const getPoolData = async (pool, token) => {
+export const getPoolData = async (chainId, pool, token) => {
+
+  const provider = chainId == 1 ? web3 : web3Polygon
+
   const weth = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
   const usdc = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
   
-  const wethPrice = await getWETHPrice()
+  const wethPrice = await getWETHPrice(chainId)
   const usdcPrice = 1
-  const poolContract = new ethers.Contract(pool, v3Pool.abi, web3)
-  
+  const poolContract = new ethers.Contract(pool, v3Pool.abi, provider)
   const token0 = await poolContract.token0()
   const data = await poolContract.slot0()
 
@@ -311,15 +313,15 @@ export const getPoolData = async (pool, token) => {
   const liquidity = await poolContract.liquidity()
   const ratio = univ3prices([6, 18], data.sqrtPriceX96).toAuto()
 
-  const tokenPrice = token0 === usdc ? usdcPrice / ratio : usdcPrice * ratio
+  const tokenPrice = token0 === usdc ? usdcPrice * ratio : usdcPrice / ratio
 
-  const usdcContract = new ethers.Contract(usdc, ERC20.abi, web3)
+  const usdcContract = new ethers.Contract(usdc, ERC20.abi, provider)
   const usdcBalance = ethers.utils.formatUnits(
     await usdcContract.balanceOf(pool),
     18
   )
 
-  const tokenContract = new ethers.Contract(token, ERC20.abi, web3)
+  const tokenContract = new ethers.Contract(token, ERC20.abi, provider)
   const symbol = await tokenContract.symbol()
   const tokenBalance = ethers.utils.formatUnits(
     await tokenContract.balanceOf(pool),
@@ -338,9 +340,10 @@ export const getPoolData = async (pool, token) => {
   }
 }
 
-export const getWETHPrice = async () => {
-  const weth_usdc = '0x45dDa9cb7c25131DF268515131f647d726f50608'
-  const poolContract = new ethers.Contract(weth_usdc, v3Pool.abi, web3)
+export const getWETHPrice = async (chainId) => {
+  const provider = chainId == 1 ? web3 : web3Polygon
+  const wethUsdcPool = ETH_USDC[chainId].address
+  const poolContract = new ethers.Contract(wethUsdcPool, v3Pool.abi, provider)
   const data = await poolContract.slot0()
   const ratio = univ3prices([6, 18], data.sqrtPriceX96).toAuto() // [] token decimals
   return ratio

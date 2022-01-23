@@ -16,8 +16,14 @@ export const v3Positions = {
 export const v3Pool = { abi: v3PoolABI }
 
 export const ETH_USDC = {
-  abi: v3PoolABI,
-  address: '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8'
+  1: {
+    abi: v3PoolABI,
+    address: '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8'
+  },
+  137: {
+    abi: v3PoolABI,
+    address: '0x45dda9cb7c25131df268515131f647d726f50608'
+  }
 }
 
 export const BATCHER = {
@@ -36,6 +42,23 @@ export const ERC20 = {
 }
 
 export const burnerPolygon = {
-  abi: burnerPolygonABI,
-  address: "0xAb1eeDf9283760940b8c15256983E98C42A3E356"
+  1: {
+    abi: burnerPolygonABI,
+    address: "0xf05DA838BCE31AA32F776b11a2De1B65AF15DbB6"
+  },
+  137: {
+    abi: burnerPolygonABI,
+    address: "0xAb1eeDf9283760940b8c15256983E98C42A3E356"
+  }
+}
+
+export const CNDL = {
+  1: {
+    abi: erc20ABI,
+    address: '0xbc138bD20C98186CC0342C8e380953aF0cb48BA8'
+  },
+  137: {
+    abi: erc20ABI,
+    address: '0x5423063af146F5abF88Eb490486E6B53FA135eC9'
+  }
 }

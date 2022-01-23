@@ -17,12 +17,13 @@ const atob = (a) => Buffer.from(a, 'base64').toString('binary')
 export const UseWeb3Context = createContext()
 
 export const Web3Provider = (props) => {
-  const { account, connect, status, ethereum, reset, balance } = useWallet()
+  const { account, connect, chainId, status, ethereum, reset, balance } = useWallet()
+
   // Remember provider preference
   const [provider, setProvider] = useLocalStorage('provider', false)
   const [block, setBlock] = useState(0)
   const [ens, setEns] = useState(false)
-  const [chainId, setChainId] = useState(1)
+
 
   // Connect/Disconnect Wallet
   const connectWallet = async (key) => {
@@ -67,12 +68,6 @@ export const Web3Provider = (props) => {
     setEns(await web3.lookupAddress(address))
   }
 
-  const getChainId = async() => {
-    const { chainId } = await web3.getNetwork()
-    setChainId(chainId)
-  }
-  
-
   // Once we've connected a wallet, switch to wallet provider
   useEffect(async () => {
     if (status === 'connected') {
@@ -92,7 +87,6 @@ export const Web3Provider = (props) => {
   // Once loaded, initalise the provider
   useEffect(() => {
     initProvider()
-    getChainId()
   }, [])
 
   const ethBalance = balance ? balance / 1e18 : 0
@@ -102,7 +96,6 @@ export const Web3Provider = (props) => {
       provider,
       setProvider,
       chainId,
-      setChainId,
       connectWallet,
       disconnectWallet,
       account,

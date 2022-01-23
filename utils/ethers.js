@@ -3,13 +3,10 @@ import { ethers } from 'ethers'
 // let provider = new ethers.providers.JsonRpcProvider(atob(ETH_NODE))
 // export let web3 = new ethers.providers.getDefaultProvider()
 
-export const chainID = process.env.CHAIN_ID ? process.env.CHAIN_ID : 137
-console.log('Chain ID: ', chainID)
+export const chainID = process.env.CHAIN_ID ? process.env.CHAIN_ID : 1
 
-export let web3 = new ethers.providers.AlchemyProvider(
-  chainID === 137 ? 137 : 1,
-  process.env.ALCHEMY_KEY
-)
+export let web3 = new ethers.providers.AlchemyProvider(1, process.env.ALCHEMY_KEY)
+export let web3Polygon = new ethers.providers.AlchemyProvider(137, process.env.ALCHEMY_KEY)
 
 const MaxUint = ethers.constants.MaxUint256
 export const zeroAddress = ethers.constants.AddressZero

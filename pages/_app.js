@@ -1,6 +1,7 @@
 import { Web3Provider } from '../contexts/useWeb3'
 import { useWallet, UseWalletProvider } from 'use-wallet'
 import { AlertProvider } from '../contexts/useAlerts'
+import useChainId from '../contexts/useChainId'
 import { chainID } from '../utils/ethers'
 
 import { ChakraProvider, CSSReset, extendTheme } from '@chakra-ui/react'
@@ -23,11 +24,12 @@ const theme = {
 }
 
 export default function App({ Component, pageProps }) {
+  const chainId = useChainId();
   return (
     <ChakraProvider theme={extendTheme({ theme })}>
       <CSSReset />
       <UseWalletProvider
-        chainId={chainID}
+        chainId={chainId}
         connectors={{
           walletconnect: { rpcUrl: 'https://mainnet.eth.aragon.network/' },
           walletlink: { url: 'https://mainnet.eth.aragon.network/' }
