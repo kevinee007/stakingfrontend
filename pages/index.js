@@ -106,11 +106,11 @@ export default function Home() {
 
   useEffect(async () => {
     if (account) {
-      const lpPositions = await findNFTByPool(account, IncentiveKey[chainId])
+      const lpPositions = await findNFTByPool(account, chainId, IncentiveKey[chainId])
       setPositions(lpPositions)
     }
     /// Calculate APY
-    if (chainId == 1) {
+    if (chainId == 137) {
       const data = await getPoolData(IncentiveKey[chainId][1], IncentiveKey[chainId][0])
       const emissionsPerSecond =
         programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
@@ -165,7 +165,7 @@ export default function Home() {
           </Flex>
 
           <Heading size="md" mb="5">
-            {`Your ${pool.symbol ? pool.symbol : '???'}/ETH positions`}
+            {`Your ${pool.symbol ? pool.symbol : '???'}/USDC positions`}
           </Heading>
           <Box
             shadow="xl"
@@ -316,21 +316,20 @@ export default function Home() {
               <Center flexDirection="column" p="6">
                 <Heading size="sm">{`No ${
                   pool.symbol ? pool.symbol : '???'
-                } positions found!`}</Heading>
+                } positions found`}</Heading>
                 <Text>
                   {`Deposit `}
                   <Link
                     isExternal
-                    href={`https://app.uniswap.org/#/add/ETH/${IncentiveKey[chainId][0]}/10000`}
+                    href={`https://app.uniswap.org/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/${IncentiveKey[chainId][0]}/10000`}
                   >
-                    <b>{`${pool.symbol ? pool.symbol : '???'} & ETH here`}</b>
+                    <b>{`${pool.symbol ? pool.symbol : '???'} & USDC here`}</b>
                   </Link>
                   {` to get started`}{' '}
                 </Text>
               </Center>
             )}
           </Box>
-          <Burn />
           <FAQs />
         </Flex>
       </Center>

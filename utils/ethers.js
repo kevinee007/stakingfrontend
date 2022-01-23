@@ -6,9 +6,9 @@ import { ethers } from 'ethers'
 export const chainID = process.env.CHAIN_ID ? process.env.CHAIN_ID : 137
 console.log('Chain ID: ', chainID)
 
-export let web3 = new ethers.providers.InfuraProvider(
-  chainID === 1 ? 'homestead' : 'rinkeby',
-  process.env.INFURA
+export let web3 = new ethers.providers.AlchemyProvider(
+  chainID === 137 ? 137 : 1,
+  process.env.ALCHEMY_KEY
 )
 
 const MaxUint = ethers.constants.MaxUint256

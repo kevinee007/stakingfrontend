@@ -21,8 +21,14 @@ export const ETH_USDC = {
 }
 
 export const BATCHER = {
-  abi: batcherABI,
-  address: '0xF83eEE39E723526605d784917b6e38ebCF0f0207'
+  1: {
+    abi: batcherABI,
+    address: '0xF83eEE39E723526605d784917b6e38ebCF0f0207'
+  },
+  137: {
+    abi: batcherABI,
+    address: '0x43676E467781dC838C8F81C671c571179E38Aeed'
+  }
 }
 
 export const ERC20 = {
