@@ -319,9 +319,9 @@ export default function Home() {
                   {`Deposit `}
                   <Link
                     isExternal
-                    href={`https://app.uniswap.org/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/${IncentiveKey[chainId][0]}/10000`}
+                    href={`https://app.uniswap.org/#/add/ETH/0x5423063af146F5abF88Eb490486E6B53FA135eC9/${IncentiveKey[chainId][0]}/10000`}
                   >
-                    <b>{`${pool.symbol ? pool.symbol : '???'} & USDC here`}</b>
+                    <b>{`${pool.symbol ? pool.symbol : '???'} & MATIC here`}</b>
                   </Link>
                   {` to get started`}{' '}
                 </Text>

@@ -125,13 +125,45 @@ export function useWeb3() {
   const web3Context = useContext(UseWeb3Context)
   if (web3Context === null) {
     throw new Error(
-      'useWeb3() can only be used inside of <UseToolsProvider />, ' +
-        'please declare it at a higher level.'
+      `useWeb3() can only be used inside of <UseToolsProvider />, please declare it at a higher level.`
     )
   }
   const { tools } = web3Context
 
   return useMemo(() => ({ ...tools }), [tools])
+}
+
+
+
+
+
+const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
+const tokenSymbol = 'TUT';
+const tokenDecimals = 18;
+const tokenImage = 'http://placekitten.com/200/300';
+
+try {
+  // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+  const wasAdded = await ethereum.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20', // Initially only supports ERC20, but eventually more!
+      options: {
+        address: tokenAddress, // The address that the token is at.
+        symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+        decimals: tokenDecimals, // The number of decimals in the token
+        image: tokenImage, // A string url of the token logo
+      },
+    },
+  });
+
+  if (wasAdded) {
+    console.log('Thanks for your interest!');
+  } else {
+    console.log('Your loss!');
+  }
+} catch (error) {
+  console.log(error);
 }
 
 export default useWeb3
