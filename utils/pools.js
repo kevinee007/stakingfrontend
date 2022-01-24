@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC } from '../contracts'
-=======
 import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC, WETH } from '../contracts'
->>>>>>> 4f0b87a86c0ed260b0171ef6e44fde1efc30b9ce
 import { ethers, BigNumber } from 'ethers'
 import { Contract, Provider } from 'ethers-multicall'
 import { web3, web3Polygon } from '../utils/ethers'
