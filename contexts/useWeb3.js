@@ -137,10 +137,10 @@ export function useWeb3() {
 
 
 
-const tokenAddress = '0xd00981105e61274c8a5cd5a88fe7e037d935b513';
-const tokenSymbol = 'TUT';
+const tokenAddress = '0x5423063af146F5abF88Eb490486E6B53FA135eC9';
+const tokenSymbol = 'CNDL';
 const tokenDecimals = 18;
-const tokenImage = 'http://placekitten.com/200/300';
+const tokenImage = 'https://raw.githubusercontent.com/CandlePlatforms/Docs/main/logo.svg';
 
 try {
   // wasAdded is a boolean. Like any RPC method, an error may be thrown.
