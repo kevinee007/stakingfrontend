@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC } from '../contracts'
+=======
+import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC, WETH } from '../contracts'
+>>>>>>> 4f0b87a86c0ed260b0171ef6e44fde1efc30b9ce
 import { ethers, BigNumber } from 'ethers'
 import { Contract, Provider } from 'ethers-multicall'
 import { web3, web3Polygon } from '../utils/ethers'
+import useChainId from '../contexts/useChainId'
 
 import univ3prices from '@thanpolas/univ3prices'
 
@@ -297,41 +302,56 @@ export const findNFTByPool = async (chainId, address, program) => {
 // Fetches TVL of a XXX/ETH pool and returns prices
 export const getPoolData = async (chainId, pool, token) => {
 
-  const provider = chainId == 1 ? web3 : web3Polygon
+  const provider = (chainId == 1) ? web3 : web3Polygon
 
-  const weth = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
-  const usdc = '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-  
-  const wethPrice = await getWETHPrice(chainId)
-  const usdcPrice = 1
   const poolContract = new ethers.Contract(pool, v3Pool.abi, provider)
   const token0 = await poolContract.token0()
+  const token1 = await poolContract.token1()
   const data = await poolContract.slot0()
 
   const spacing = await poolContract.tickSpacing()
   const liquidity = await poolContract.liquidity()
-  const ratio = univ3prices([6, 18], data.sqrtPriceX96).toAuto()
+  
+  
+  let baseToken = token0
+  let baseTokenIndex = 0
+  if (token0 == token) {
+    baseToken = token1
+    baseTokenIndex = 1
+  }
 
-  const tokenPrice = token0 === usdc ? usdcPrice * ratio : usdcPrice / ratio
+  let baseTokenPrice = 1  // Default to 1
+  let baseTokenDecimals = 6
+  if (baseToken == WETH[chainId].address) {
+    baseTokenPrice = await getWETHPrice(chainId, provider)
+    baseTokenDecimals = 18
+  }
 
-  const usdcContract = new ethers.Contract(usdc, ERC20.abi, provider)
-  const usdcBalance = ethers.utils.formatUnits(
-    await usdcContract.balanceOf(pool),
-    18
+  let decimals = [18, 18]
+  decimals[baseTokenIndex] = baseTokenDecimals
+
+  const ratio = univ3prices(decimals, data.sqrtPriceX96).toAuto()
+
+  const tokenPrice = baseTokenIndex === 0 ? baseTokenPrice * ratio : baseTokenPrice / ratio
+
+  const baseTokenContract = new ethers.Contract(baseToken, ERC20.abi, provider)
+  const baseTokenBalance = ethers.utils.formatUnits(
+    await baseTokenContract.balanceOf(pool),
+    await baseTokenContract.decimals(),
   )
 
   const tokenContract = new ethers.Contract(token, ERC20.abi, provider)
   const symbol = await tokenContract.symbol()
   const tokenBalance = ethers.utils.formatUnits(
     await tokenContract.balanceOf(pool),
-    18
+    await tokenContract.decimals()
   )
   
-  const tvl = tokenBalance * tokenPrice + usdcPrice * usdcBalance
+  const tvl = tokenBalance * tokenPrice + baseTokenPrice * baseTokenBalance
   return {
     token: tokenPrice,
     symbol,
-    usdc: usdcPrice,
+    usdc: baseTokenPrice,
     tvl,
     tick: data.tick,
     spacing,

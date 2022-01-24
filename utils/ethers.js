@@ -15,14 +15,14 @@ export const registerProvider = (wallet) => {
   if (wallet) {
     console.log('Using Wallet provider')
     try {
-      web3 = new ethers.providers.Web3Provider(wallet)
+      web3 = new ethers.providers.Web3Provider(wallet, 'any')
       wallet.on('chainChanged', (_chainId) => window.location.reload())
     } catch (error) {
       console.log(error)
     }
   } else if (window && window.ethereum) {
     console.log('Using Window provider')
-    web3 = new ethers.providers.Web3Provider(window.ethereum)
+    web3 = new ethers.providers.Web3Provider(window.ethereum, 'any')
     window.ethereum.on('chainChanged', (_chainId) => window.location.reload())
   }
 }
