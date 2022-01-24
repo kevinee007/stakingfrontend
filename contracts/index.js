@@ -9,22 +9,32 @@ export const v3Staker = {
   abi: v3StakerABI,
   address: '0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d'
 }
-export const v3Positions = {
+export const v3Positions = { //same on both polygon and ethereum
   abi: v3PositionsABI,
   address: '0xc36442b4a4522e871399cd717abdd847ab11fe88'
 }
 export const v3Pool = { abi: v3PoolABI }
 
-export const ETH_USDC = {
+export const v3StakerPolygon = {
+  abi: v3StakerABI,
+  address: '0xe34139463bA50bD61336E0c446Bd8C0867c6fE65'
+}
+
+
+export const CNDL_MATIC = {
   1: {
     abi: v3PoolABI,
-    address: '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8'
+    address: '0x2feaC2752F8124f1EDDA2cda4a8756a39E4Da110'
   },
   137: {
     abi: v3PoolABI,
-    address: '0x45dda9cb7c25131df268515131f647d726f50608'
+    address: '0x351561a40612Bd78F8e60f3C5A09f919c7b5c579'
   }
 }
+
+
+
+
 
 export const BATCHER = {
   1: {

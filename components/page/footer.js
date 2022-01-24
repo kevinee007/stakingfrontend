@@ -5,7 +5,7 @@ import useWeb3 from '../../contexts/useWeb3'
 const links = [
   {
     label: 'Github',
-    href: 'https://github.com/CandlePLatforms',
+    href: 'https://github.com/CandlePlatforms',
     isExternal: true
   },
   {

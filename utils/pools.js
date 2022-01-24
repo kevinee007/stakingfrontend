@@ -1,5 +1,4 @@
 import { v3Positions, v3Staker, v3Pool, ERC20, BATCHER, ETH_USDC } from '../contracts'
-import { commas } from '../utils/helpers'
 import { ethers, BigNumber } from 'ethers'
 import { Contract, Provider } from 'ethers-multicall'
 import { web3, web3Polygon } from '../utils/ethers'

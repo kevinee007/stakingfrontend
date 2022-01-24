@@ -42,7 +42,7 @@ import {
     return (
       <>
         <Heading ml="4" mt="16" mb="4" size="md">
-          Burn your CNDL
+          Burn Candle
         </Heading>
         <Text>CNDL Amount:</Text>
         <Input
@@ -50,16 +50,16 @@ import {
             onChange={e => setCndlAmount(e.target.value)}
             placeholder="CNDL amount"
         />
-        <Text>Message:</Text>
+        <Text>Your Message:</Text>
         <Textarea
             value={burnMessage}
             onChange={e => setburnMessage(e.target.value)}
-            placeholder="Note down your message"
+            placeholder="Write down your message"
         />
 
         <Stack direction='row' spaceing={4}>
-            <Button onClick={onApprove} colorScheme='blue'>Approve</Button>
-            <Button onClick={onBurn} colorScheme='blue'>Burn</Button>
+            <Button onClick={onApprove} colorScheme='blue'>Approve Burn</Button>
+            <Button onClick={onBurn} colorScheme='blue'>Commence Burn</Button>
         </Stack>
       </>
     )
