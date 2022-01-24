@@ -17,7 +17,6 @@ import {
 import { Box, Heading, Text, Center, Link } from '@chakra-ui/layout'
 import { useColorModeValue } from '@chakra-ui/color-mode'
 
-import Burn from '../components/burn'
 import Page from '../components/page'
 import FAQs from '../components/faqs'
 import { useWeb3 } from '../contexts/useWeb3'
@@ -109,16 +108,18 @@ export default function Home() {
       setPositions(lpPositions)
     }
     /// Calculate APY
-    const data = await getPoolData(chainId, IncentiveKey[chainId][1], IncentiveKey[chainId][0])
-    const emissionsPerSecond =
-      programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
-    const apy =
-      ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
-    setPool({ ...data, apy })
-  }, [account, block])
+    if (account) {
+      const data = await getPoolData(chainId, IncentiveKey[chainId][1], IncentiveKey[chainId][0])
+      const emissionsPerSecond =
+        programEmissions / (IncentiveKey[chainId][3] - IncentiveKey[chainId][2])
+      const apy =
+        ((emissionsPerSecond * data.token * secondsInAYear) / data.tvl) * 100
+      setPool({ ...data, apy })
+    }
+  }, [account, block, chainId])
 
   return (
-    <Page title={pool.symbol ? pool.symbol + '/ETH' : false}>
+    <Page title='Candle'>
       <Center>
         <Flex
           flexDirection="column"

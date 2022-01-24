@@ -21,7 +21,6 @@ import {
     async function onApprove() {
         if (cndlAmount > 0) {
             const signer = web3.getSigner()
-            console.log(CNDL[chainId].address)
             const cndlContract = new ethers.Contract(CNDL[chainId].address, ERC20.abi, signer)
           await cndlContract.approve(burnerPolygon[chainId].address, ethers.utils.parseUnits(cndlAmount, 18))
         }
